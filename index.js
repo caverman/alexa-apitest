@@ -1,14 +1,8 @@
-/**
- 
- Copyright 2016 Brian Donohue.
- 
-*/
-
 'use strict';
 
 var IPRetriever = require('./ip_retriever');
-// Route the incoming request based on type (LaunchRequest, IntentRequest,
-// etc.) The JSON body of the request is provided in the event parameter.
+var HTTPGet = require('./http_get')
+
 exports.handler = function (event, context) {
     try {
         console.log("event.session.application.applicationId=" + event.session.application.applicationId);
@@ -67,8 +61,14 @@ function onIntent(intentRequest, session, callback) {
 
 function handleTestRequest(intent, session, callback) {
     var executeCallback = function(result) {
+	console.log('Resolved ip to: ' + result)
+	new HTTPGet().executeHttpGet('https://httpbin.org/get?ip=' + result,
     callback(session.attributes,
-        buildSpeechletResponseWithoutCard("Hello, World! " + result, ""));
+        buildSpeechletResponseWithoutCard("Successfully updated", "")),
+    callback(session.attributes,
+        buildSpeechletResponseWithoutCard("Errir Updating", "")),
+)
+}
 }
 
 	console.log('Calling ip')
