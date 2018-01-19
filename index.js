@@ -60,16 +60,21 @@ function onIntent(intentRequest, session, callback) {
 
 
 function handleTestRequest(intent, session, callback) {
+    
+    var succesfulCompletion = function() {
+    callback(session.attributes,
+        buildSpeechletResponseWithoutCard("Successfully updated", ""))        
+    }
+    var errorCompletion = function() {
+    callback(session.attributes,
+        buildSpeechletResponseWithoutCard("Errir Updating", ""))        
+    }
+    
     var executeCallback = function(result) {
 	console.log('Resolved ip to: ' + result)
-	new HTTPGet().executeHttpGet('https://httpbin.org/get?ip=' + result,
-    callback(session.attributes,
-        buildSpeechletResponseWithoutCard("Successfully updated", "")),
-    callback(session.attributes,
-        buildSpeechletResponseWithoutCard("Errir Updating", "")),
-)
+	new HTTPGet().executeHttpGet('https://httpbin.org/get?ip=' + result, succesfulCompletion, errorCompletion)
 }
-}
+
 
 	console.log('Calling ip')
 	new IPRetriever().getIpAddress('fergusb.dyndns.org', executeCallback);
@@ -120,4 +125,5 @@ function buildResponse(sessionAttributes, speechletResponse) {
         response: speechletResponse
     };
 }
+
 

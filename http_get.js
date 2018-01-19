@@ -2,22 +2,23 @@ const https = require('https');
  
 function HTTPGet() {}
 
-HTTPGet.prototype.executeHttpGet = function(url, callbackSuccess, callbackFail) {
-const { URL } = require('url');
+HTTPGet.prototype.executeHttpGet = function(theUrl, callbackSuccess, callbackFail) {
+const url = require('url');
 
 const myURL =
-  new URL(url);
+  new url.parse(theUrl);
 var options = 
 	{
 host : myURL.hostname,
 port : myURL.port,
-path : myURL.pathname,
+path : myURL.path,
+
         rejectUnauthorized: false, 
 
    strictSSL: false
 
 };
-
+console.log('Making HTTP request')
 https.get(options, (resp) => {
   let data = '';
 console.log('here') 
@@ -40,3 +41,4 @@ console.log('here')
 }
 
 module.exports = HTTPGet;
+
